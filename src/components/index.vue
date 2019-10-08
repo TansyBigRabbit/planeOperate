@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="bg_content">
 <!-- <div class="line"></div> -->
 <el-menu
   :default-active="activeIndex"
@@ -13,13 +13,27 @@
   <el-menu-item index="2">跑道防入侵
   	<span v-if="!readStatus" class="circle"> <span> 1</span> </span> </el-menu-item>   
 </el-menu>
-<!-- <operateParams style="width: 600px;padding: 15px;height: 300px" :params04="params05"></operateParams> -->
-<!-- <takeOffLog style="width: 600px;padding: 15px;height: 300px" :params04="params04"></takeOffLog> -->
-<!-- <handleLights style="width: 300px;padding: 15px;height: 300px" :params01="params01" v-on:listenTochildEvent="showMessageFromChild"></handleLights> -->
-<!-- <takeOffQueue style="width: 600px;padding: 15px;height: 300px" :params02="params02" @getLightsData01="getLightsData($event)"></takeOffQueue> -->
- <eventLog style="width: 600px;padding: 15px;height: 300px" :params03="params03" v-on:haveread="haveReadAlert" ></eventLog>   
-<!-- <sceneStatus style="width: 600px;padding: 15px;height: 300px" :params06="params06"></sceneStatus> -->
-	</div>
+<div class="main_content">
+<div class="part1" style="display: flex">
+<!--起飞降落队列-->
+<takeOffQueue style="flex: 5;margin-bottom: 10px" :params02="params02" @getLightsData01="getLightsData($event)"></takeOffQueue> 
+<!--起降日志-->
+<takeOffLog class="item_box" style="flex: 1;" :params04="params04"></takeOffLog>
+<!--事件日志-->
+<eventLog  class="item_box" style="flex: 2;margin-right: 0px" :params03="params03" v-on:haveread="haveReadAlert" ></eventLog> 
+</div>
+<div class="part2" style="display: flex">
+  <!--场面动态-->
+<sceneStatus class="item_box" style="flex: 3"  :params06="params06"></sceneStatus> 
+<div style="flex: 1">
+ <!--手动控灯-->
+<handleLights style="margin-right: 0px" class="item_box"  :params01="params01" v-on:listenTochildEvent="showMessageFromChild"></handleLights> 
+<!--运行参数-->
+<operateParams style="margin-right: 0px" class="item_box"  :params04="params05"></operateParams>
+</div>
+</div>
+</div>
+</div>
 </template>
 
 <script>
@@ -95,4 +109,25 @@
     line-height: 20px;
     text-align: center
     }
+    .el-table__row tr{
+    max-height: 50px;
+ }
+ .bg_content{
+  background-color: #F0FFFF
+ }
+ .main_content{
+  padding: 15px
+ }
+ .item_box{
+  background-color: #fff;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 6px #ddd;
+  margin-right: 10px;
+  margin-bottom: 10px;
+ }
+ hr{
+  color: #ddd
+ }
 </style>

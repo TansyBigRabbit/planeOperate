@@ -1,27 +1,28 @@
 <!-- 当前降落/起飞队列 -->
 <template>
-	<div class="flex_box">
-		<div style="flex:1">
+	<div class="queueBox">
+		<div class="item_box01">
 			<div class="flex_box" style="justify-content: space-between;
 			">
-				<span>当前降落队列</span>
-				<span>{{currentTime}}</span>
-			</div><hr/>
+				<p>当前降落队列</p>
+				<p><span style="font-size: 12px">{{currentTime}}</span></p>
+			</div>
+            <hr style="margin-top: 0"/>
 			<transition name="el-zoom-in-top">
 			<div v-show="showTable01">
 				<el-table
 			    :data="descentList"
-			    stripe
-			    style="width: 100%">
+			    stripe >
 			     <el-table-column
 			      prop="index"
 			      align="center"
-			      label="序号" >
+			      label="序号" 
+                  width="50%" >
 			    </el-table-column>
 			    <el-table-column
 			      prop="flightNum"
 			      align="center"
-			      label="航班号" >
+			      label="航班号"  >
 			    </el-table-column>
 			    <el-table-column
 			      prop="etat"
@@ -31,34 +32,36 @@
 			    <el-table-column
 			      prop="distance"
 			      align="center"
-			      label="距跑道">
+			      label="距跑道" >
 			    </el-table-column>
 			    <el-table-column
 			      prop="beforeDis"
 			      align="center"
-			      label="前/后间距">
+			      label="前/后间距"
+                  width="130%">
 			    </el-table-column>
 			  </el-table>
 			 </div>
 			 </transition>
-		</div>
-
-		<div style="flex:1">
+		</div> 
+        <div style="width: 10px;height: 100%"></div>
+		<div class="item_box02">
 			<div class="flex_box" style="justify-content: space-between;
 			">
-				<span>当前起飞队列</span>
-				<span>{{currentTime}}</span>
-			</div><hr/>
+				<p>当前起飞队列</p>
+				<p><span style="font-size: 12px">{{currentTime}}</span></p>
+			</div>
+            <hr style="margin-top: 0" />
 			<transition name="el-zoom-in-top">
 			<div v-show="showTable01">
 				<el-table
 			    :data="takeOffList"
-			    stripe
-			    style="width: 100%">
+			    stripe >
 			     <el-table-column
 			      prop="index"
 			      align="center"
-			      label="序号" >
+			      label="序号"
+                  width="50%" >
 			    </el-table-column>
 			    <el-table-column
 			      prop="flightNum"
@@ -68,17 +71,19 @@
 			    <el-table-column
 			      prop="traceEnter"
 			      align="center"
-			      label="跑道入口" >
+			      label="跑道入口"  >
 			    </el-table-column>
 			    <el-table-column
 			      prop="takeOffTime"
 			      align="center"
-			      label="预计起飞时间">
+			      label="预计起飞时间"
+                  width="130%" >
 			    </el-table-column> 
 			  </el-table>
 			 </div>
 			 </transition>
 		</div>
+        <div class="clearFix"></div>
 	</div>
 </template>
 
@@ -158,7 +163,7 @@
 		},
 		created(){
 			setInterval(this.getCurrentTime,1000);
-            setInterval(this.autoPage,5000);
+            //setInterval(this.autoPage,5000);
 		},
 		methods:{
          getCurrentTime(){
@@ -306,5 +311,32 @@
 	}
 </script>
 <style>
-	
+    .queueBox{ 
+        width: 100%
+    }
+	.queueBox>div{
+        float: left; 
+    }
+    .clearFix{
+        clear: both;
+    }
+    .item_box01{
+        height: 100%;
+        width: calc(51% - 5px);
+        background-color: #fff;
+        padding: 0 10px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        box-shadow: 1px 1px 6px #ddd; 
+    }
+    .item_box02{
+        height: 100%;
+        width: calc(49% - 15px);
+        background-color: #fff;
+        padding: 0 10px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        box-shadow: 1px 1px 6px #ddd;
+        margin-right: 10px; 
+    }
 </style>

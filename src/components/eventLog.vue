@@ -7,17 +7,17 @@
 			<el-table
 			    :data="eventLogData"
 			    stripe
-			    height="250"
-			    style="width: 100%">
+			    height="290" >
 			     <el-table-column
 			      prop="eventTime"
 			      align="center"
-			      label="事件时间" >
+			      label="事件时间" 
+			      width="180%">
 			    </el-table-column>
 			    <el-table-column
 			      prop="eventType" 
 			      align="center"
-			      label="事件类型" >
+			      label="事件类型"  >
 			      <template slot-scope="scope">
 				    <span class="type0" v-if="scope.row.eventType==0">跑道入侵</span>
 				    <span class="type1" v-if="scope.row.eventType==1">手动灯控</span>
@@ -27,17 +27,17 @@
 			    <el-table-column
 			      prop="eventObj"
 			      align="center"
-			      label="对象" >
+			      label="对象"  >
 			    </el-table-column>
 			    <el-table-column
 			      prop="detail"
 			      align="center"
-			      label="详情">
+			      label="详情" >
 			    </el-table-column>
-			   <el-table-column label="操作" align="center" min-width="130%"> 
+			   <el-table-column label="操作" align="center" width="80%"> 
 	            <template v-if="scope.row.eventType==0" slot-scope="scope">
 	               
-	              <el-button v-if="!readStatus" @click="haveRead" type="primary" size="small">标记为已读</el-button>
+	              <el-button v-if="!readStatus" @click="haveRead" type="primary" size="small">已读</el-button>
 	            </template>
 	          </el-table-column>
 			  </el-table>

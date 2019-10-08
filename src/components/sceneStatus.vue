@@ -1,7 +1,8 @@
 <!--sceneStatus场面动态-->
 <template>
 	<div>
-		<p>场面动态</p>
+		<div><p>场面动态</p></div>
+		<hr />
 		<div>
 			<img style="max-width: 100%" src="../../static/scene.jpg">
 		</div>

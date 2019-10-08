@@ -2,17 +2,19 @@
 <template>
 	<div >
 	<div class="flex_box" style="justify-content: space-between;">
-		<span>手动灯控</span>
+		<p>手动灯控</p>
+		<p>
 		<el-switch
 		  v-model="value"
 		  active-color="#13ce66"
 		  inactive-color="#ddd"
 		  @change="switchChange">
 		</el-switch>
+	</p>
 	</div>
-
-	<div>
-		<div>
+   <hr />
+	<div style="display: flex;">
+		<div style="flex: 1">
 			<el-checkbox :disabled="!value" v-model="checked01" @change="checkChange01('checked01','lights01','lights02','checkedAfter01')">灯光联动</el-checkbox>
 			<!-- <div class="flex_box" style="flex-wrap: wrap;">
 				<span class="light_box" >
@@ -30,13 +32,14 @@
 					<div style="height: 25%"><hr /></div>
 					<div><hr /></div>
 				</div>
+				<div v-else class="line"></div>
 				<div class="light_box">
 					<div v-for="(item,index) in lights02" @click="clickLight('lights02',index)" class="light_noActive" :id="'lights02'+index" >{{item.name}}</div> 
 				</div>
 			</div>
 		</div>
 
-		<div>
+		<div style="flex: 1">
 			<el-checkbox :disabled="!value" v-model="checked02" @change="checkChange01('checked02','lights03','lights04','checkedAfter02')">灯光联动</el-checkbox>
 			<!-- <div class="flex_box" style="flex-wrap: wrap;">
 				<span class="light_box" >
@@ -54,6 +57,7 @@
 					<div style="height: 25%"><hr /></div>
 					<div><hr /></div>
 				</div>
+				<div v-else class="line"></div>
 				<div class="light_box">
 					<div v-for="(item,index) in lights04" @click="clickLight('lights04',index)" class="light_noActive" :id="'lights04'+index" >{{item.name}}</div> 
 				</div>
@@ -81,7 +85,7 @@
              	check:false
                 },{
              	name:"L1红",
-             	check:false
+             	check:true
                 },{
              	name:"L1关",
              	check:false
@@ -91,7 +95,7 @@
              	check:false
                 },{
              	name:"L2红",
-             	check:false
+             	check:true
                 },{
              	name:"L2关",
              	check:false
@@ -101,7 +105,7 @@
              	check:false
                 },{
              	name:"L3红",
-             	check:false
+             	check:true
                 },{
              	name:"L3关",
              	check:false
@@ -111,12 +115,18 @@
              	check:false
                 },{
              	name:"L4红",
-             	check:false
+             	check:true
                 },{
              	name:"L4关",
              	check:false
                 }]
 			}
+		},
+		mounted(){
+        document.getElementById("lights011").setAttribute("class","light_active_red");
+        document.getElementById("lights021").setAttribute("class","light_active_red");
+        document.getElementById("lights031").setAttribute("class","light_active_red");
+        document.getElementById("lights041").setAttribute("class","light_active_red");
 		},
 		watch:{ 
 		},
@@ -153,37 +163,54 @@
 		 	return;
 		 }
 		 var that = this;
-		 //var lightsdata = {};
+		 //第一个灯光联动checkbox开启
+		 if(this.checked01){
+         if(name=="lights01"||name=="lights02"){
+         if(this[name][index].check){
+             this.closeTogether("lights01","lights02",index)  
+         }else{
+         	this.changeTogether("lights01","lights02",index)
+         }
+         }else if(name=="lights03"||name=="lights04"){
+         	if(this[name][index].check){
+             this.closeTogether("lights03","lights04",index)
+         	}else{
+         	this.changeTogether("lights03","lights04",index)	
+         	}
+         }
+		 }else{
+           //var lightsdata = {};
          if(this[name][index].check){
              this[name][index].check=false;
              document.getElementById(name+index).setAttribute("class","light_noActive"); 
              this.lightsdata = this.createParam(name,"关闭"); 
+             that.$emit("listenTochildEvent",this.lightsdata); 
          }else{
 			for(let i=0;i<this[name].length;i++){
          		if(this[name][i].check){
 			 	this[name][i].check=false;
 			 	this.lightsData = this.createParam(name,"关闭"); 
+			 	that.$emit("listenTochildEvent",this.lightsdata); 
              	document.getElementById(name+i).setAttribute("class","light_noActive");
          		} 
          	}
          	this[name][index].check=true;
             if(index==0){
              this.lightsdata = this.createParam(name,"开启");
-             
+             that.$emit("listenTochildEvent",this.lightsdata); 
              document.getElementById(name+index).setAttribute("class","light_active_green");
             }else if(index==1){
              this.lightsdata = this.createParam(name,"开启"); 
+             that.$emit("listenTochildEvent",this.lightsdata); 
              document.getElementById(name+index).setAttribute("class","light_active_red");
             }else{
              this.lightsdata = this.createParam(name,"开启"); 
+             that.$emit("listenTochildEvent",this.lightsdata); 
              document.getElementById(name+index).setAttribute("class","light_active_black");
             }
          }
-             console.log(this.lightsdata);
-             console.log("------")
-             that.$emit("listenTochildEvent",this.lightsdata);
-             
-		},
+		 } 
+		 },
 		createParam(name,type){ //0-关闭 1-开启
          var eventTime = this.getCurrentTime();
          var eventObj ="L"+name.substring(name.length-1,name.length);
@@ -209,6 +236,71 @@
          pad2(n){ 
          	return n < 10 ? '0' + n : n 
          },
+         closeTogether(name1,name2,index){
+         	 var that = this;
+             this[name1][index].check=false;
+             this[name2][index].check=false;
+             document.getElementById(name1+index).setAttribute("class","light_noActive"); 
+             document.getElementById(name2+index).setAttribute("class","light_noActive"); 
+             this.lightsdata = this.createParam(name1,"关闭");
+             that.$emit("listenTochildEvent",this.lightsdata);
+
+             setTimeout(function(){
+             that.lightsdata = that.createParam(name2,"关闭");
+             that.$emit("listenTochildEvent",that.lightsdata);
+             },200) 
+             
+         },
+         changeTogether(name1,name2,index){
+         	var that = this;
+          for(let i=0;i<this[name1].length;i++){
+               if(this[name1][i].check){
+			 	this[name1][i].check=false;
+			 	this.lightsData = this.createParam(name1,"关闭"); 
+			 	that.$emit("listenTochildEvent",this.lightsdata); 
+             	document.getElementById(name1+i).setAttribute("class","light_noActive");
+         		} 
+         	} 
+         	for(let k=0;k<this[name2].length;k++){
+               if(this[name2][k].check){
+			 	this[name2][k].check=false;
+			 	this.lightsData = this.createParam(name2,"关闭"); 
+			 	that.$emit("listenTochildEvent",this.lightsdata); 
+             	document.getElementById(name2+k).setAttribute("class","light_noActive");
+         		} 
+         	}
+            this[name1][index].check=true;
+            this[name2][index].check=true;
+            if(index==0){
+             this.lightsdata = this.createParam(name1,"开启");
+             that.$emit("listenTochildEvent",this.lightsdata); 
+             setTimeout(function(){
+             that.lightsdata = that.createParam(name2,"开启");
+             that.$emit("listenTochildEvent",that.lightsdata);
+             },200);
+              document.getElementById(name1+index).setAttribute("class","light_active_green");
+
+             document.getElementById(name2+index).setAttribute("class","light_active_green");
+            }else if(index==1){
+             this.lightsdata = this.createParam(name1,"开启"); 
+             that.$emit("listenTochildEvent",this.lightsdata); 
+             setTimeout(function(){
+             that.lightsdata = that.createParam(name2,"开启");
+             that.$emit("listenTochildEvent",that.lightsdata);
+             },200);
+             document.getElementById(name1+index).setAttribute("class","light_active_red");
+             document.getElementById(name2+index).setAttribute("class","light_active_red");
+            }else{
+             this.lightsdata = this.createParam(name1,"开启"); 
+             that.$emit("listenTochildEvent",this.lightsdata); 
+             document.getElementById(name1+index).setAttribute("class","light_active_black");
+			 setTimeout(function(){
+             that.lightsdata = that.createParam(name2,"开启");
+             that.$emit("listenTochildEvent",that.lightsdata);
+             },200);
+             document.getElementById(name2+index).setAttribute("class","light_active_black");
+            }
+         },
 		}
 	}
 </script>
@@ -222,7 +314,7 @@
 	.light_box>div{ 
 		border-radius: 5px;
 		box-sizing: border-box;
-		width: 60%;
+		width: 70%;
 		margin: 10px auto;
 		padding: 5px 10px;
 		cursor: pointer;
@@ -244,7 +336,7 @@
      color:#ddd;
 	}
 	.line{
-		width: 30%;
+		width: 20%;
 		text-align: center;
 	}
 	.line>div{
